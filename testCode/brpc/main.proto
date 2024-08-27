@@ -1,0 +1,20 @@
+// 终端执行命令：protoc --cpp_out=./ main.proto 
+
+syntax="proto3"; // 声明版本
+package example; // 声明命名空间
+
+option cc_generic_services = true; // 生成框架代码包含相关rpc接口
+
+// 定义类
+message EchoRequest{
+    string message = 1;
+};
+message EchoResponse{
+    string message = 1;
+};
+
+// 定义服务
+service EchoService{
+    // rpc远程调用接口
+    rpc Echo(EchoRequest) returns (EchoResponse);
+};
