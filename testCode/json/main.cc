@@ -6,13 +6,16 @@
 
 bool serialize(const Json::Value &val, std::string &content)
 {
-    // 定义工厂类
-    Json::StreamWriterBuilder swb;
-    // 使用工厂类创建工具类
-    std::unique_ptr<Json::StreamWriter> sw(swb.newStreamWriter());
-    // 序列化
+    // 实例化一个 StreamWriteBuilder 对象
+    Json::StreamWriterBuilder jsb;
+
+    // 通过 StreamWriteBuilder 类对象生产一个 StreamWrite 对象
+    std::unique_ptr<Json::StreamWriter> jsw(jsb.newStreamWriter());
+
+    // 使用 StreamWrite 对象，对Json::Values中的数据序列化
+    // 创建字符串流对象接收反序列化后的结果
     std::stringstream ss;
-    if(sw->write(val, &ss) != 0)
+    if(jsw->write(val, &ss) != 0)
     {
         std::cout << "失败" << std::endl;
         return false;
@@ -24,19 +27,19 @@ bool serialize(const Json::Value &val, std::string &content)
 
 bool unSerialize(Json::Value &val, const std::string &content)
 {
-    // 定义工厂类
-    Json::CharReaderBuilder crb;
-    // 使用工厂类创建工具类
-    std::unique_ptr<Json::CharReader> cr(crb.newCharReader());
-    // 序列化
-    std::stringstream ss;
-    if(!cr->parse(content.c_str(), content.c_str() + content.size(), &val, &ss))
+    // 实例化一个CharReaderBuilder工厂类对象
+        Json::CharReaderBuilder jcr;
+
+    // 使用CharReaderBuilder工厂类生产一个CharReader对象
+    std::unique_ptr<Json::CharReader> jcb(jcr.newCharReader());
+
+    // 使用CharReader对象进行json格式字符串str的反序列化
+    if(!jcb->parse(content.c_str(), content.c_str() + content.size(), &val, nullptr))
     {
         std::cout << "失败" << std::endl;
         return false;
     }
 
-    content = ss.str();
     return true;
 }
 
