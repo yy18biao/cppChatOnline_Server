@@ -1,5 +1,5 @@
 #include <gflags/gflags.h>
-#include "../common/etcd.hpp"
+#include "../common/elasticlient.hpp"
 
 DEFINE_bool(mode, false, "日志器运行模式");
 DEFINE_string(filename, "", "日志器输出文件名");
@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
     google::ParseCommandLineFlags(&argc, &argv, true);
     initLogger(FLAGS_mode, FLAGS_filename, FLAGS_level);
 
-    EtcdRegClient::ptr regClient = std::make_shared<EtcdRegClient>(FLAGS_etcdHost);
-    regClient->reg(FLAGS_serviceBasedir + FLAGS_serviceInstance, "127.0.0.1:8001");
-    std::this_thread::sleep_for(std::chrono::seconds(600));
+    std::shared_ptr<elasticlient::Client> client(new elasticlient::Client({"http://127.0.0.1:9200/"}));
+    ESIndex es(client, "user", "_doc");
+    es.append("name", "text").append("id", "keyword").append("description", "text", "ik_max_word", false).create();
 }
