@@ -51,14 +51,14 @@ bool unSerialize(Json::Value &val, const std::string &content)
 class ESIndex
 {
 private:
-    std::string _name;       // 索引名称
-    std::string _type;       // 索引类型
-    Json::Value _properties; // 请求Json类型字段中的自定义值
-    Json::Value _index;      // 最终的请求Json类型字段
+    std::string _name;                             // 索引名称
+    std::string _type;                             // 索引类型
+    Json::Value _properties;                       // 请求Json类型字段中的自定义值
+    Json::Value _index;                            // 最终的请求Json类型字段
     std::shared_ptr<elasticlient::Client> _client; // es客户端对象
 
 public:
-    ESIndex(std::shared_ptr<elasticlient::Client>& client, const std::string &name, const std::string &type)
+    ESIndex(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
         : _name(name), _type(type), _client(client)
     {
         // 设置字段里的默认值
@@ -75,10 +75,10 @@ public:
 
     // 添加Json字段的内容
     // key为数据名称，type为数据类型，analyzer为分词器类型，enable为是否开启查询
-    ESIndex append(const std::string &key,
-                const std::string &type = "text",
-                const std::string &analyzer = "ik_max_word",
-                bool enable = true)
+    ESIndex &append(const std::string &key,
+                    const std::string &type = "text",
+                    const std::string &analyzer = "ik_max_word",
+                    bool enable = true)
     {
         // 设置字段里的值
         Json::Value fields;
@@ -91,8 +91,8 @@ public:
         return *this;
     }
 
-    // 创建最终字段并发起请求 
-    bool create()
+    // 创建最终字段并发起请求
+    bool create(const std::string& id = "default_id")
     {
         // 创建出最终的字段
         Json::Value mappings;
@@ -112,9 +112,9 @@ public:
         // 发起搜索请求
         try
         {
-            cpr::Response resp = _client->index(_name, _type, "", body);
+            cpr::Response resp = _client->index(_name, _type, id, body);
 
-            if(resp.status_code < 200 || resp.status_code >= 300)
+            if (resp.status_code < 200 || resp.status_code >= 300)
             {
                 ERROR("创建ES索引{}失败，响应状态码异常", _name);
                 return false;
@@ -126,6 +126,203 @@ public:
             return false;
         }
 
+        DEBUG("创建ES索引{}成功", _name);
+
         return true;
+    }
+};
+
+// 索引数据新增类
+class ESInsert
+{
+private:
+    std::string _name;                             // 索引名称
+    std::string _type;                             // 索引类型
+    Json::Value _index;                            // 最终的请求Json类型字段
+    std::shared_ptr<elasticlient::Client> _client; // es客户端对象
+
+public:
+    ESInsert(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        : _name(name), _type(type), _client(client)
+    {
+    }
+
+    // 插入字段数据
+    ESInsert &append(const std::string &key, const std::string &val)
+    {
+        _index[key] = val;
+        return *this;
+    }
+
+    // id为索引的id
+    // 最终插入数据接口(发送请求)
+    bool insert(const std::string &id)
+    {
+        std::string body;
+        if (!serialize(_index, body))
+        {
+            ERROR("索引序列化失败");
+            return false;
+        }
+
+        std::cout << body << "\n";
+
+        // 发起搜索请求
+        try
+        {
+            cpr::Response resp = _client->index(_name, _type, id, body);
+
+            if (resp.status_code < 200 || resp.status_code >= 300)
+            {
+                ERROR("新增ES索引{}的数据失败，响应状态码异常", _name);
+                return false;
+            }
+        }
+        catch (std::exception &e)
+        {
+            ERROR("新增ES索引{}的数据失败: {}", _name, e.what());
+            return false;
+        }
+
+        DEBUG("新增ES索引{}的数据成功", _name);
+
+        return true;
+    }
+};
+
+// 索引数据删除类
+class ESRemove
+{
+private:
+    std::string _name;                             // 索引名称
+    std::string _type;                             // 索引类型
+    std::shared_ptr<elasticlient::Client> _client; // es客户端对象
+
+public:
+    ESRemove(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        : _name(name), _type(type), _client(client)
+    {
+    }
+
+    bool remove(const std::string &id)
+    {
+        // 发起搜索请求
+        try
+        {
+            cpr::Response resp = _client->remove(_name, _type, id);
+
+            if (resp.status_code < 200 || resp.status_code >= 300)
+            {
+                ERROR("删除ES索引{}的数据失败，响应状态码异常", _name);
+                return false;
+            }
+        }
+        catch (std::exception &e)
+        {
+            ERROR("删除ES索引{}的数据失败: {}", _name, e.what());
+            return false;
+        }
+
+        DEBUG("删除ES索引{}的数据成功", _name);
+
+        return true;
+    }
+};
+
+// 索引数据检索类
+class ESSearch
+{
+private:
+    std::string _name;                             // 索引名称
+    std::string _type;                             // 索引类型
+    Json::Value _must_not;                         // 字段中的must_not部分
+    Json::Value _should;                           // 字段中的should部分
+    Json::Value _index;                            // 最终的请求Json类型字段
+    std::shared_ptr<elasticlient::Client> _client; // es客户端对象
+
+public:
+    ESSearch(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        : _name(name), _type(type), _client(client)
+    {
+    }
+
+    // 添加字段中must_not部分的数据
+    ESSearch &appendMustNot(const std::string &key, const std::vector<std::string> &val)
+    {
+        // 最里层
+        Json::Value field;
+        for (const auto &str : val)
+            field[key].append(str);
+
+        // terms部分
+        Json::Value terms;
+        terms["terms"] = field;
+
+        // must_not部分
+        _must_not.append(terms);
+
+        return *this;
+    }
+
+    // 添加字段中should部分的数据
+    ESSearch &appendShould(const std::string &key, const std::string &val)
+    {
+        Json::Value field;
+        field[key] = val;
+
+        Json::Value match;
+        match["match"] = field;
+
+        _should.append(match);
+
+        return *this;
+    }
+
+    Json::Value search()
+    {
+        Json::Value cond;
+        if (!_must_not.empty())
+            cond["must_not"] = _must_not;
+        if (!_should.empty())
+            cond["should"] = _should;
+
+        Json::Value query;
+        query["bool"] = cond;
+
+        _index["query"] = query;
+
+        std::string body;
+        if (!serialize(_index, body))
+        {
+            ERROR("索引序列化失败");
+            return Json::Value();
+        }
+
+        std::cout << body << "\n";
+
+        // 发起搜索请求
+        cpr::Response resp;
+        try
+        {
+            resp = _client->search(_name, _type, body);
+
+            if (resp.status_code < 200 || resp.status_code >= 300)
+            {
+                ERROR("检索ES索引{}的数据失败，响应状态码异常", _name);
+                return Json::Value();
+            }
+        }
+        catch (std::exception &e)
+        {
+            ERROR("检索ES索引{}的数据失败: {}", _name, e.what());
+            return Json::Value();
+        }
+
+        DEBUG("检索ES索引{}的数据成功", _name);
+
+        // 对响应类型反序列化得到json类型
+        Json::Value resp_json;
+        unSerialize(resp_json, resp.text);
+        return resp_json["hits"]["hits"];
     }
 };

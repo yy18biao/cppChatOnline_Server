@@ -14,6 +14,33 @@ int main(int argc, char* argv[])
     initLogger(FLAGS_mode, FLAGS_filename, FLAGS_level);
 
     std::shared_ptr<elasticlient::Client> client(new elasticlient::Client({"http://127.0.0.1:9200/"}));
+
     ESIndex es(client, "user", "_doc");
-    es.append("name", "text").append("id", "keyword").append("description", "text", "ik_max_word", false).create();
+    es.append("nickname", "text").append("phone", "keyword", "ik_max_word").create();
+    std::cout << "index success\n";
+
+    // 数据新增与数据修改 一样的操作 id一样就是修改
+    ESInsert ess(client, "user", "_doc");
+    ess.append("nickname", "zhangsan").append("phone", "1111111").insert("00001");
+    std::cout << "insert success\n";
+
+    // 检索
+    ESSearch esss(client, "user", "_doc");
+    Json::Value user = esss.appendMustNot("nickname", {"wangwu"}).search();
+    if(user.empty() || !user.isArray())
+    {
+        ERROR("检索出的数据出错");
+        return -1;
+    }
+    int sz = user.size();
+    for(int i = 0; i < sz; ++i)
+    {
+        std::cout << user[i]["_source"]["nickname"].asString() << "\n";
+    }
+    std::cout << "Search success\n";
+
+    // 删除
+    ESRemove essss(client, "user", "_doc");
+    essss.remove("00001");
+
 }
