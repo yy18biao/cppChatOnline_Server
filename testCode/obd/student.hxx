@@ -100,3 +100,5 @@ struct allName
 {
     std::string _name;
 };
+
+// odb -d mysql --std c++11 --generate-query --generate-schema --profile boost/date-time student.hxx
