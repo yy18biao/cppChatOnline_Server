@@ -74,6 +74,8 @@
         "csignal": "cpp",
         "strstream": "cpp",
         "regex": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "codecvt": "cpp",
+        "*.ipp": "cpp"
     }
 }

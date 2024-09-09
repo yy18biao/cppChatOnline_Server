@@ -11,7 +11,7 @@ int main()
     AMQP::LibEvHandler handler(loop);
 
     // 实例化网络连接对象
-    AMQP::TcpConnection connection(&handler, AMQP::Address("amqp://root:123456@localhost:15672/"));
+    AMQP::TcpConnection connection(&handler, AMQP::Address("amqp://root:123456@localhost:5672/"));
 
     // 实例化信道对象
     AMQP::TcpChannel channel(&connection);

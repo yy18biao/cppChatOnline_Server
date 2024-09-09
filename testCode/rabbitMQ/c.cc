@@ -10,7 +10,7 @@
 void callback(AMQP::TcpChannel *channel, const AMQP::Message &message, uint64_t delivertTag, bool redelivered)
 {
     std::string msg;
-    msg.assign(message.body);
+    msg.assign(message.body(), message.bodySize());
     std::cout << msg << std::endl;
     channel->ack(delivertTag);
 }
@@ -24,7 +24,7 @@ int main()
     AMQP::LibEvHandler handler(loop);
 
     // 实例化网络连接对象
-    AMQP::Address address("amqp://root:123456@127.0.0.1:15672/");
+    AMQP::Address address("amqp://root:123456@127.0.0.1:5672/");
     AMQP::TcpConnection connection(&handler, address);
 
     // 实例化信道对象
@@ -33,7 +33,7 @@ int main()
     // 声明交换机并设置声明成功与失败的回调函数
     channel.declareExchange("test-exchange", AMQP::ExchangeType::direct)
             .onError([](const char *message){ std::cout << "声明交换机失败 : "<< message << "\n"; exit(0); })
-            .onSuccess([](){ std::cout << "声明交换机成功 : " << message << "\n"; }); 
+            .onSuccess([](){ std::cout << "声明交换机成功" << "\n"; }); 
 
     // 声明队列并设置声明成功与失败的回调函数
     channel.declareQueue("test-queue")
