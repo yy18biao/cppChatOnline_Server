@@ -1,0 +1,23 @@
+syntax="proto3"; // 声明版本
+package hjb; // 声明命名空间
+
+option cc_generic_services = true; // 生成框架代码包含相关rpc接口
+
+message SpeechReq {
+    string requestId = 1;              //请求ID
+    bytes content = 2;           //语音数据
+    optional string userId = 3;        //用户ID
+    optional string sessionId = 4;     //登录会话ID(网关进行身份鉴权)
+}
+
+message SpeechRsp {
+    string requestId = 1;              //请求ID
+    bool success = 2;                   //请求处理结果标志
+    optional string errMsg = 3;         //失败原因
+    optional string res = 4;      //识别后的文字数据
+}
+
+// 定义语音识别Rpc服务及接口
+service SpeechService {
+    rpc SpeechRecognition(SpeechReq) returns (SpeechRsp);
+}

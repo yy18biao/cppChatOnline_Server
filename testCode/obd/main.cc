@@ -1,6 +1,6 @@
 #include <string>
-#include <memory>  // std::auto_ptr
-#include <cstdlib> // std::exit
+#include <memory>
+#include <cstdlib>
 #include <iostream>
 #include <odb/database.hxx>
 #include <odb/mysql/database.hxx>

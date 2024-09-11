@@ -76,6 +76,7 @@
         "regex": "cpp",
         "cfenv": "cpp",
         "codecvt": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "*.inc": "cpp"
     }
 }
