@@ -1,0 +1,30 @@
+syntax = "proto3";
+package hjb;
+
+option cc_generic_services = true;
+
+// 消息类型
+enum MessageType {
+    STRING = 0;
+    IMAGE = 1;
+    FILE = 2;
+    SPEECH = 3;
+}
+
+message FileMessageInfo {
+    optional string fileId = 1; // 文件id
+    optional int64 fileSize = 2; // 文件大小
+    optional string fileName = 3; // 文件名称
+    optional bytes fileContent = 4; // 文件数据
+}
+
+message FileDownloadData {
+    string fileId = 1; // 文件id
+    bytes fileContent = 2; // 文件数据
+}
+
+message FileUploadData {
+    string fileName = 1; // 文件名称
+    int64 fileSize = 2; // 文件大小
+    bytes fileContent = 3; // 文件数据
+}

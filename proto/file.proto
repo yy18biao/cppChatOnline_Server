@@ -1,0 +1,76 @@
+syntax = "proto3";
+package hjb;
+import "base.proto";
+
+option cc_generic_services = true;
+
+// 单个文件下载请求
+message GetSingleFileReq {
+    string requestId = 1;
+    string fileId = 2;
+    optional string userId = 3;
+    optional string sessionId = 4;
+}
+
+// 单个文件下载响应
+message GetSingleFileResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    optional FileDownloadData fileData = 4;
+}
+
+// 多个文件下载请求
+message GetMultiFileReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+    repeated string fileIdList = 4;
+}
+
+// 多个文件下载响应
+message GetMultiFileResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    map<string, FileDownloadData> fileData = 4; // 文件ID与文件数据的映射
+}
+
+// 单个文件上传请求
+message PutSingleFileReq {
+    string requestId = 1; // 请求ID
+    optional string userId = 2;
+    optional string sessionId = 3;
+    FileUploadData fileData = 4;
+}
+
+// 单个文件上传响应
+message PutSingleFileResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3;
+    FileMessageInfo fileInfo = 4; // 返回文件组织的元信息
+}
+
+// 多个文件上传请求
+message PutMultiFileReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+    repeated FileUploadData fileData = 4;
+}
+
+// 多个文件上传响应
+message PutMultiFileResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated FileMessageInfo fileInfo = 4;
+}
+
+service FileService {
+    rpc GetSingleFile(GetSingleFileReq) returns (GetSingleFileResp);
+    rpc GetMultiFile(GetMultiFileReq) returns (GetMultiFileResp);
+    rpc PutSingleFile(PutSingleFileReq) returns (PutSingleFileResp);
+    rpc PutMultiFile(PutMultiFileReq) returns (PutMultiFileResp);
+}
