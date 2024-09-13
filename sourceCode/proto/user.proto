@@ -1,0 +1,162 @@
+syntax = "proto3";
+package hjb;
+import "base.proto";
+option cc_generic_services = true;
+
+// 用户注册   
+message UserRegReq {
+    string requestId = 1; // 请求id
+    string nickname = 2; // 昵称
+    string phone = 3; // 手机号
+    string password = 4; // 密码
+    optional string verifyCodeId = 5; //验证码id
+    optional string verifyCode = 6;//验证码
+}
+message UserRegResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3;
+}
+
+
+//用户名登录 
+message UserLoginReq {
+    string requestId = 1;
+    string userId = 2;
+    string password = 3;
+    optional string verifyCodeId = 4;
+    optional string verifyCode = 5;
+}
+message UserLoginResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3;
+    string loginSessionId = 4;
+}
+
+
+//手机号登录
+message PhoneLoginReq {
+    string requestId = 1;
+    string phone = 2;
+    string verifyCodeId = 3;
+    string verifyCode = 4;
+}
+message PhoneLoginResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    string loginSessionId = 4;
+}
+
+
+// 手机号验证码获取
+message PhoneVerifyCodeReq {
+    string requestId = 1;
+    string phone = 2;
+}
+message PhoneVerifyCodeResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3;
+    string verifyCodeId = 4;
+}
+
+
+// 当前登录用户的个人信息获取
+// 客户端传递的时候只需要填充sessionId即可
+message GetUserInfoReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+}
+message GetUserInfoResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    UserInfo userInfo = 4;
+}
+
+// 一次获取多个已登录用户的个人信息
+message GetMultiUserInfoReq {
+    string requestId = 1;
+    repeated string userIds = 2;
+}
+message GetMultiUserInfoResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    map<string, UserInfo> users = 4;
+}
+
+
+//用户头像修改 
+message SetUserPhotoReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+    string photo = 4;
+}
+message SetUserPhotoResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+}
+
+
+//用户昵称修改 
+message SetNicknameReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+    string nickname = 4;
+}
+message SetNicknameResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+}
+
+
+//用户签名修改 
+message SetUserDescReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+    string desc = 4;
+}
+message SetUserDescResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+}
+
+
+//用户手机修改 
+message SetPhoneReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string sessionId = 3;
+    string phone = 4;
+    string phoneVerifyCodeId = 5;
+    string phoneVerifyCode = 6;
+}
+message SetPhoneResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+}
+
+
+service UserService {
+    rpc UserRegister(UserRegReq) returns (UserRegResp);
+    rpc UserLogin(UserLoginReq) returns (UserLoginResp);
+    rpc GetPhoneVerifyCode(PhoneVerifyCodeReq) returns (PhoneVerifyCodeResp);
+    rpc PhoneLogin(PhoneLoginReq) returns (PhoneLoginResp);
+    rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoResp);
+    rpc GetMultiUserInfo(GetMultiUserInfoReq) returns (GetMultiUserInfoResp);
+    rpc SetUserAvatar(SetUserPhotoReq) returns (SetUserPhotoResp);
+    rpc SetUserNickname(SetNicknameReq) returns (SetNicknameResp);
+    rpc SetUserDescription(SetUserDescReq) returns (SetUserDescResp);
+    rpc SetUserPhoneNumber(SetPhoneReq) returns (SetPhoneResp);
+}

@@ -28,3 +28,12 @@ message FileUploadData {
     int64 fileSize = 2; // 文件大小
     bytes fileContent = 3; // 文件数据
 }
+
+// 用户信息结构
+message UserInfo {
+    string userId = 1; 
+    string nickname = 2; 
+    string desc = 3; 
+    string phone = 4; 
+    string  userPhotoId = 5;
+}
