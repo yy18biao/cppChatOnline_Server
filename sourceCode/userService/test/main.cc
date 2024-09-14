@@ -1,6 +1,4 @@
-#include "mysql.hpp"
-#include "user-odb.hxx"
-#include "user.hxx"
+#include "../../common/mysql.hpp"
 
 void insert(UserTable &userTb)
 {
@@ -46,10 +44,10 @@ int main()
 
     UserTable user(db);
 
-    insert(user);
-    // update_by_id(user);
-    // update_by_phone(user);
-    // update_by_nickname(user);
-    // select_users(user);
+    // insert(user);
+    // updateById(user);
+    // updateByPhone(user);
+    // selectByNickname(user);
+     select_users(user);
     return 0;
 }

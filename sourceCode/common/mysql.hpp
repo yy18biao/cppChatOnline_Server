@@ -1,11 +1,13 @@
+#pragma once
+
 #include <string>
 #include <memory>
 #include <cstdlib>
 #include <iostream>
 #include <odb/database.hxx>
 #include <odb/mysql/database.hxx>
-#include <gflags/gflags.h>
-#include "../../common/log.hpp"
+
+#include "log.hpp"
 #include "user-odb.hxx"
 #include "user.hxx"
 
@@ -14,7 +16,7 @@ class ODBFactory
 {
 public:
     // 构造数据库操作对象
-    static std::shared_ptr<odb::mysql::database> create(const std::string &user,
+    static std::shared_ptr<odb::core::database> create(const std::string &user,
                                                         const std::string &password,
                                                         const std::string &host,
                                                         const std::string &db,
@@ -33,14 +35,15 @@ public:
     }
 };
 
-
 class UserTable
 {
 private:
-    std::shared_ptr<odb::mysql::database> _db;
+    std::shared_ptr<odb::core::database> _db;
 
 public:
-    UserTable(const std::shared_ptr<odb::mysql::database> &db)
+    using ptr = std::shared_ptr<UserTable>;
+
+    UserTable(const std::shared_ptr<odb::core::database> &db)
         : _db(db)
     {
     }
@@ -141,7 +144,15 @@ public:
             odb::transaction trans(_db->begin());
 
             // 查询指定数据操作
-            odb::result<UserInfo> users(_db->query<UserInfo>(odb::query<UserInfo>::nickname == nickname));
+            odb::result<UserInfo> res(_db->query<UserInfo>(odb::query<UserInfo>::nickname == nickname));
+
+            auto it = res.begin();
+            while (it != res.end())
+            {
+                users.push_back(*it);
+                ++it;
+            }
+
 
             // 提交事务
             trans.commit();

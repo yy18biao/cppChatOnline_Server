@@ -6,12 +6,10 @@
 #include <odb/nullable.hxx>
 #include <odb/core.hxx>
 
-namespace hjb
-{
 #pragma db object table("userInfo")
-    class UserInfo
-    {
-    private:
+class UserInfo
+{
+private:
         friend class odb::access; // 设置为友元类才可以让odb进行访问私有成员
 
 #pragma db id auto         // 设置主键和自增长
@@ -34,7 +32,7 @@ namespace hjb
 
         odb::nullable<std::string> _desc; // 用户个性签名
 
-    public:
+public:
         UserInfo() {}
 
         UserInfo(std::string &userId, std::string &nickname, std::string &password, std::string &phone)
@@ -58,7 +56,6 @@ namespace hjb
 
         void userPhotoId(const std::string &userPhotoId) { _userPhotoId = userPhotoId; }
         odb::nullable<std::string> userPhotoId() { return _userPhotoId; }
-    };
+};
 
-    // odb -d mysql --std c++11 --generate-query --generate-schema --profile boost/date-time user.hxx
-}
+// odb -d mysql --std c++11 --generate-query --generate-schema --profile boost/date-time user.hxx
