@@ -11,7 +11,7 @@
 #include "user-odb.hxx"
 #include "user.hxx"
 
-// odb工厂(提供相关配置操作)
+// odb工厂(构造数据库操作对象)
 class ODBFactory
 {
 public:

@@ -60,7 +60,7 @@ namespace hjb
         std::shared_ptr<elasticlient::Client> _client; // es客户端对象
 
     public:
-        ESIndex(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        ESIndex(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type = "_doc")
             : _name(name), _type(type), _client(client)
         {
             // 设置字段里的默认值
@@ -144,7 +144,7 @@ namespace hjb
         std::shared_ptr<elasticlient::Client> _client; // es客户端对象
 
     public:
-        ESInsert(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        ESInsert(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type = "_doc")
             : _name(name), _type(type), _client(client)
         {
         }
@@ -237,13 +237,13 @@ namespace hjb
     private:
         std::string _name;                             // 索引名称
         std::string _type;                             // 索引类型
-        Json::Value _must_not;                         // 字段中的must_not部分
+        Json::Value _mustNot;                         // 字段中的must_not部分
         Json::Value _should;                           // 字段中的should部分
         Json::Value _index;                            // 最终的请求Json类型字段
         std::shared_ptr<elasticlient::Client> _client; // es客户端对象
 
     public:
-        ESSearch(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        ESSearch(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type = "_doc")
             : _name(name), _type(type), _client(client)
         {
         }
@@ -261,7 +261,7 @@ namespace hjb
             terms["terms"] = field;
 
             // must_not部分
-            _must_not.append(terms);
+            _mustNot.append(terms);
 
             return *this;
         }
@@ -283,8 +283,8 @@ namespace hjb
         Json::Value search()
         {
             Json::Value cond;
-            if (!_must_not.empty())
-                cond["must_not"] = _must_not;
+            if (!_mustNot.empty())
+                cond["must_not"] = _mustNot;
             if (!_should.empty())
                 cond["should"] = _should;
 
