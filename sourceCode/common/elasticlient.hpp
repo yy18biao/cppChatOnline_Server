@@ -109,8 +109,6 @@ namespace hjb
                 return false;
             }
 
-            std::cout << body << "\n";
-
             // 发起搜索请求
             try
             {
@@ -166,8 +164,6 @@ namespace hjb
                 ERROR("索引序列化失败");
                 return false;
             }
-
-            std::cout << body << "\n";
 
             // 发起搜索请求
             try
@@ -299,8 +295,6 @@ namespace hjb
                 ERROR("索引序列化失败");
                 return Json::Value();
             }
-
-            std::cout << body << "\n";
 
             // 发起搜索请求
             cpr::Response resp;

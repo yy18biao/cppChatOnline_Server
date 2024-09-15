@@ -30,10 +30,10 @@ message FileUploadData {
 }
 
 // 用户信息结构
-message UserInfo {
+message UserProto {
     string userId = 1; 
     string nickname = 2; 
     string desc = 3; 
     string phone = 4; 
-    string  userPhotoId = 5;
+    bytes photo = 5;
 }

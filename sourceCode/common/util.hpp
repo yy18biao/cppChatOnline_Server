@@ -33,6 +33,21 @@ namespace hjb
         return ss.str();
     }
 
+    // 生成6位验证码
+    std::string vcode()
+    {
+        std::random_device rd;                                 
+        std::mt19937 generator(rd());                          
+        std::uniform_int_distribution<int> distribution(0, 9);
+
+        std::stringstream ss;
+        for (int i = 0; i < 6; i++)
+        {
+            ss << distribution(generator);
+        }
+        return ss.str();
+    }
+
     // 文件读操作
     bool readFile(const std::string &filename, std::string &body)
     {
@@ -45,11 +60,11 @@ namespace hjb
         }
 
         // 跳转到文件末尾
-        ifs.seekg(0, std::ios::end); 
+        ifs.seekg(0, std::ios::end);
         // 获取当前偏移量
         size_t flen = ifs.tellg();
         // 跳转到文件起始
-        ifs.seekg(0, std::ios::beg); 
+        ifs.seekg(0, std::ios::beg);
 
         body.resize(flen);
         ifs.read(&body[0], flen);

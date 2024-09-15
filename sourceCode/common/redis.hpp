@@ -94,10 +94,13 @@ public:
     VerifyCode(const std::shared_ptr<sw::redis::Redis> &client) : _client(client) {}
 
     // 新增验证码(有过期时间 默认五分钟)
-    void append(const std::string &cid, const std::string &code,
-                const std::chrono::milliseconds &t = std::chrono::milliseconds(10000))
+    void append(const std::string &cid, 
+                const std::string &phone, 
+                const std::string &code,
+                const std::chrono::seconds &t = std::chrono::seconds(300))
     {
-        _client->set(cid, code, t);
+        _client->hset(cid, std::make_pair(phone, code));
+        _client->expire(cid, t);
     }
 
     void remove(const std::string &cid)
@@ -106,8 +109,8 @@ public:
     }
 
     // 获取验证码
-    sw::redis::OptionalString code(const std::string &cid)
+    sw::redis::OptionalString code(const std::string &cid, const std::string &phone)
     {
-        return _client->get(cid);
+        return _client->hget(cid, phone);
     }
 };

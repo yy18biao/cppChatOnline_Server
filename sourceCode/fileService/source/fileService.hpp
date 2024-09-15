@@ -30,7 +30,7 @@ namespace hjb
         }
 
         // 单文件下载
-        void GetSingleFile(google::protobuf::RpcController *cntl_base,
+        void GetSingleFile(::google::protobuf::RpcController *cntl_base,
                            const ::hjb::GetSingleFileReq *request,
                            ::hjb::GetSingleFileResp *response,
                            ::google::protobuf::Closure *done)
@@ -158,7 +158,6 @@ namespace hjb
         }
     };
 
-    // 语音识别rpc服务器
     class FileServer
     {
     private:
@@ -186,7 +185,6 @@ namespace hjb
         }
     };
 
-    // 语音识别rpc服务器建造类
     class FileServerBuild
     {
     public:
@@ -199,7 +197,7 @@ namespace hjb
             _regClient->reg(serviceName, accessHost);
         }
 
-        // 构造RPC服务器对象
+        // 添加并启动rpc服务
         void makeRpcServer(uint16_t port, int32_t timeout, uint8_t threads)
         {
             // 添加rpc服务
@@ -222,7 +220,6 @@ namespace hjb
             }
         }
 
-        // 生成语音识别模块服务器
         FileServer::ptr build()
         {
             if (!_regClient)

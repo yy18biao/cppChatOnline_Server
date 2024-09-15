@@ -6,11 +6,12 @@ option cc_generic_services = true;
 // 用户注册   
 message UserRegReq {
     string requestId = 1; // 请求id
-    string nickname = 2; // 昵称
-    string phone = 3; // 手机号
-    string password = 4; // 密码
-    optional string verifyCodeId = 5; //验证码id
-    optional string verifyCode = 6;//验证码
+    string userId = 2; // 昵称
+    string nickname = 3; // 昵称
+    string phone = 4; // 手机号
+    string password = 5; // 密码
+    optional string verifyCodeId = 6; //验证码id
+    optional string verifyCode = 7;//验证码
 }
 message UserRegResp {
     string requestId = 1;
@@ -74,7 +75,7 @@ message GetUserInfoResp {
     string requestId = 1;
     bool success = 2;
     string errmsg = 3; 
-    UserInfo userInfo = 4;
+    UserProto user = 4;
 }
 
 // 一次获取多个已登录用户的个人信息
@@ -86,7 +87,7 @@ message GetMultiUserInfoResp {
     string requestId = 1;
     bool success = 2;
     string errmsg = 3; 
-    map<string, UserInfo> users = 4;
+    map<string, UserProto> users = 4;
 }
 
 
@@ -155,7 +156,7 @@ service UserService {
     rpc PhoneLogin(PhoneLoginReq) returns (PhoneLoginResp);
     rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoResp);
     rpc GetMultiUserInfo(GetMultiUserInfoReq) returns (GetMultiUserInfoResp);
-    rpc SetUserAvatar(SetUserPhotoReq) returns (SetUserPhotoResp);
+    rpc SetUserPhoto(SetUserPhotoReq) returns (SetUserPhotoResp);
     rpc SetUserNickname(SetNicknameReq) returns (SetNicknameResp);
     rpc SetUserDescription(SetUserDescReq) returns (SetUserDescResp);
     rpc SetUserPhoneNumber(SetPhoneReq) returns (SetPhoneResp);

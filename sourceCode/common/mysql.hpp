@@ -49,7 +49,7 @@ public:
     }
 
     // 新增用户
-    void insert(std::shared_ptr<UserInfo> &user)
+    bool insert(std::shared_ptr<UserInfo> &user)
     {
         try
         {
@@ -65,11 +65,14 @@ public:
         catch (std::exception &e)
         {
             ERROR("新增用户 {} 失败 ：{}", user->userId(), e.what());
+            return false;
         }
+
+        return true;
     }
 
     // 修改用户信息(注意传参的用户必须是查询出来的用户)
-    void update(std::shared_ptr<UserInfo> &user)
+    bool update(std::shared_ptr<UserInfo> &user)
     {
         try
         {
@@ -85,7 +88,10 @@ public:
         catch (std::exception &e)
         {
             ERROR("修改用户 {} 失败 ：{}", user->userId(), e.what());
+            return false;
         }
+
+        return true;
     }
 
     // 根据id查询用户信息
@@ -106,6 +112,7 @@ public:
         catch (std::exception &e)
         {
             ERROR("查询用户 {} (账号) 失败 ：{}", userId, e.what());
+            return nullptr;
         }
 
         return res;

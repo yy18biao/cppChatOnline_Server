@@ -18,6 +18,8 @@ private:
     std::shared_ptr<elasticlient::Client> _client;
 
 public:
+    using ptr = std::shared_ptr<ESUser>;
+
     ESUser(const std::shared_ptr<elasticlient::Client> &client)
         : _client(client) {}
 
@@ -25,7 +27,6 @@ public:
     bool createIndex()
     {
         if (!hjb::ESIndex(_client, "user")
-                 .append("id", "keyword", "standard", true)
                  .append("userId", "keyword", "standard", true)
                  .append("nickname")
                  .append("phone", "keyword", "standard", true)
@@ -42,21 +43,19 @@ public:
     }
 
     // 添加索引数据
-    bool appendData(const std::string &id,
-                    const std::string &userId,
+    bool appendData(const std::string &userId,
                     const std::string &nickname,
                     const std::string &phone,
                     const std::string &desc,
                     const std::string &userPhotoId)
     {
         if (!hjb::ESInsert(_client, "user")
-                 .append("id", id)
                  .append("userId", userId)
                  .append("nickname", nickname)
                  .append("phone", phone)
                  .append("desc", desc)
                  .append("userPhotoId", userPhotoId)
-                 .insert(id))
+                 .insert(userId))
         {
             ERROR("用户索引数据新增失败 -- {}", userId);
             return false;
@@ -73,8 +72,8 @@ public:
         std::vector<UserInfo> users;
 
         Json::Value json_user = hjb::ESSearch(_client, "user")
-                                    .appendShould("id.keyword", key)
                                     .appendShould("userId.keyword", key)
+                                    .appendShould("phone.keyword", key)
                                     .appendShould("nickname", key)
                                     .appendMustNot("userId.keyword", uids)
                                     .search();
@@ -90,6 +89,7 @@ public:
         for (int i = 0; i < sz; i++)
         {
             UserInfo user;
+            user.userId(json_user["_source"]["userId"].asString());
             user.nickname(json_user[i]["_source"]["nickname"].asString());
             user.desc(json_user[i]["_source"]["desc"].asString());
             user.phone(json_user[i]["_source"]["phone"].asString());
@@ -97,5 +97,45 @@ public:
             users.push_back(user);
         }
         return users;
+    }
+
+    // 查询唯一账号条件数据
+    std::shared_ptr<UserInfo> searchUserId(const std::string &uid)
+    {
+        Json::Value json_user = hjb::ESSearch(_client, "user")
+                                    .appendShould("userId.keyword", {uid})
+                                    .search();
+
+        
+
+        if (!json_user.isArray())
+            return nullptr;
+
+        std::shared_ptr<UserInfo> user = std::make_shared<UserInfo>();
+        user->userId(json_user["_source"]["userId"].asString());
+        user->nickname(json_user["_source"]["nickname"].asString());
+        user->desc(json_user["_source"]["desc"].asString());
+        user->phone(json_user["_source"]["phone"].asString());
+        user->userPhotoId(json_user["_source"]["userPhotoId"].asString());
+        return user;
+    }
+
+    // 查询唯一手机号码条件数据
+    std::shared_ptr<UserInfo> searchPhone(const std::string &phone)
+    {
+        Json::Value json_user = hjb::ESSearch(_client, "user")
+                                    .appendShould("phone.keyword", {phone})
+                                    .search();
+
+         if (!json_user.isArray())
+            return nullptr;
+
+        std::shared_ptr<UserInfo> user = std::make_shared<UserInfo>();
+        user->userId(json_user["_source"]["userId"].asString());
+        user->nickname(json_user["_source"]["nickname"].asString());
+        user->desc(json_user["_source"]["desc"].asString());
+        user->phone(json_user["_source"]["phone"].asString());
+        user->userPhotoId(json_user["_source"]["userPhotoId"].asString());
+        return user;
     }
 };

@@ -22,10 +22,10 @@ private:
         std::string _phone;                 // 用户手机号
 
 #pragma db type("varchar(64)")
-        odb::nullable<std::string> _nickname; // 用户昵称
+        std::string _nickname; // 用户昵称
 
 #pragma db type("varchar(255)")
-        odb::nullable<std::string> _password; // 用户密码
+        std::string _password; // 用户密码
 
 #pragma db type("varchar(64)")
         odb::nullable<std::string> _userPhotoId; // 用户头像
@@ -35,21 +35,26 @@ private:
 public:
         UserInfo() {}
 
-        UserInfo(std::string &userId, std::string &nickname, std::string &password, std::string &phone)
+        UserInfo(const std::string &userId, 
+                 const std::string &nickname, 
+                 const std::string &password, 
+                 const std::string &phone)
             : _userId(userId), _nickname(nickname), _password(password), _phone(phone)
         {
         }
 
         // 各个成员的访问与设置接口
+        void userId(const std::string &userId) { _userId = userId; }
         std::string userId() { return _userId; }
 
         void nickname(const std::string &nickname) { _nickname = nickname; }
-        odb::nullable<std::string> nickname() { return _nickname; }
+        std::string nickname() { return _nickname; }
 
         void phone(const std::string &phone) { _phone = phone; }
         std::string phone() { return _phone; }
 
         void password(const std::string &password) { _password = password; }
+        std::string password() { return _password; }
 
         void desc(const std::string &desc) { _desc = desc; }
         odb::nullable<std::string> desc() { return _desc; }
