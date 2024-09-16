@@ -1,4 +1,4 @@
-#include "speechService.hpp"
+#include "speechServer.hpp"
 
 DEFINE_bool(runMode, false, "程序的运行模式，false-调试； true-发布；");
 DEFINE_string(logFile, "", "发布模式下指定日志的输出文件");

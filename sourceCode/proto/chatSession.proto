@@ -1,0 +1,35 @@
+// protoc --cpp_out=./ --experimental_allow_proto3_optional chatSession.proto
+
+syntax = "proto3";
+package hjb;
+import "base.proto";
+
+option cc_generic_services = true;
+
+// 收到聊天会话新消息的请求
+message NewMessageReq {
+    string requestId = 1;
+    optional string userId = 2; // 用户id
+    optional string loginSessionId = 3; // 用户的登录会话id
+    string chatSessionId = 4;  // 聊天会话ID
+    MessageContent message = 5; // 消息内容
+}
+
+message NewMessageResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+}
+
+// 消息转发所需的最终消息以及转发的对象
+message GetTransmitTargetResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    MessageInfo message = 4; // 组织好的消息结构
+    repeated string targetIds = 5; // 消息的转发目标列表
+}
+
+service MessageTransmitService {
+    rpc GetTransmitTarget(NewMessageReq) returns (GetTransmitTargetResp);
+}

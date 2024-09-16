@@ -45,6 +45,7 @@ target_link_libraries(${test} -lgflags -lspdlog -lfmt -lbrpc -lssl -lcrypto -lpr
 # 设置头文件默认搜索路径
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common/mysql)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../thirdInclude/speechApi)
 
 # 设置安装路径

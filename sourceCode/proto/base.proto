@@ -11,6 +11,18 @@ enum MessageType {
     SPEECH = 3;
 }
 
+// 文本消息数据类
+message StringMessageInfo {
+    string content = 1;//文字聊天内容
+}
+
+// 图片消息数据类
+message ImageMessageInfo {
+    optional string fileId = 1; // 图片文件id
+    optional bytes content = 2; // 图片文件数据
+}
+
+// 文件消息数据类
 message FileMessageInfo {
     optional string fileId = 1; // 文件id
     optional int64 fileSize = 2; // 文件大小
@@ -18,11 +30,39 @@ message FileMessageInfo {
     optional bytes fileContent = 4; // 文件数据
 }
 
+// 语音消息数据类
+message SpeechMessageInfo {
+    optional string fileId = 1; // 语音文件id
+    optional bytes content = 2; // 语音文件数据
+}
+
+// 消息的内容
+message MessageContent {
+    MessageType messageType = 1; //消息类型
+    oneof content {
+        StringMessageInfo stringMessage = 2; // 文字消息
+        FileMessageInfo fileMessage = 3; // 文件消息
+        SpeechMessageInfo speechMessage = 4; // 语音消息
+        ImageMessageInfo imageMessage = 5; // 图片消息
+    };
+}
+
+// 消息类
+message MessageInfo {
+    string messageId = 1; // 消息ID
+    string chatSessionId = 2; // 消息所属聊天会话ID
+    int64 timestamp = 3; // 消息产生时间
+    UserProto sender = 4; // 消息发送者信息
+    MessageContent message = 5;
+}
+
+// 文件下载数据类
 message FileDownloadData {
     string fileId = 1; // 文件id
     bytes fileContent = 2; // 文件数据
 }
 
+// 文件上传数据类
 message FileUploadData {
     string fileName = 1; // 文件名称
     int64 fileSize = 2; // 文件大小

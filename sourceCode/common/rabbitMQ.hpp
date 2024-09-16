@@ -22,6 +22,8 @@ namespace hjb
         }
 
     public:
+        using ptr = std::shared_ptr<MQClient>;
+
         using MessageCallback = std::function<void(const char *, size_t)>;
 
         MQClient(const std::string &user,
@@ -94,6 +96,8 @@ namespace hjb
                 ERROR("消息发布失败");
                 return false;
             }
+
+            DEBUG("消息发布成功：{}", msg);
 
             return true;
         }

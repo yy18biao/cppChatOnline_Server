@@ -2,19 +2,19 @@
 cmake_minimum_required(VERSION 3.1.3)
 
 # 声明项目工程名称
-project(userServer)
+project(chatSessionServer)
 
 # 声明目标文件名称
-set(target "userServer")
+set(target "chatSessionServer")
 
 set(protoPath ${CMAKE_CURRENT_SOURCE_DIR}/../proto/) # 添加所需的proto源文件路径
-set(protoFiles user.proto base.proto file.proto) # 添加所需的proto映射代码源文件名称
+set(protoFiles user.proto base.proto chatSession.proto) # 添加所需的proto映射代码源文件名称
 set(protoH "") # proto所映射的.h文件名称
 set(protoC "") # proto所映射的.cc文件名称
 set(protoCs "") # proto所映射的全部.cc文件名称
 
 set(odbPath ${CMAKE_CURRENT_SOURCE_DIR}/../odb/) # 添加所需的odb源文件路径
-set(odbFiles user.hxx) # 添加所需的odb映射代码源文件名称
+set(odbFiles chatSessionUser.hxx) # 添加所需的odb映射代码源文件名称
 set(odbH "") # odb所映射的.hxx文件名称
 set(odbC "") # odb所映射的.cxx文件名称
 set(odbCs "") # odb所映射的全部.cxx文件名称
@@ -67,20 +67,21 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source srcFiles)
 add_executable(${target} ${srcFiles} ${protoCs} ${odbCs})
 
 # 设置需要链接的库
-target_link_libraries(${target} -lgflags -lspdlog -lfmt -lbrpc -lssl -lcrypto -lprotobuf -lleveldb -letcd-cpp-api -lcpprest -lcurl -ljsoncpp -lodb-mysql -lodb -lodb-boost -lcpr -lelasticlient -lalibabacloud-sdk-core -lhiredis -lredis++)
+target_link_libraries(${target} -lgflags -lspdlog -lfmt -lbrpc -lssl -lcrypto -lprotobuf -lleveldb -letcd-cpp-api -lcpprest -lcurl -ljsoncpp -lodb-mysql -lodb -lodb-boost -lcpr -lelasticlient -lamqpcpp -lev -lpthread -ldl)
 
 # 设置头文件默认搜索路径
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common/mysql)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../odb)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../thirdInclude/speechApi)
 
 # 测试
-set(test "userClient")
+set(test "chatSessionClient")
 set(testFiles "")
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/test testFiles)
 add_executable(${test} ${testFiles} ${protoCs}  ${odbCs})
-target_link_libraries(${test} -lgtest -lgflags -lspdlog -lfmt -lbrpc -lssl -lcrypto -lprotobuf -lleveldb -letcd-cpp-api -lcpprest -lcurl -ljsoncpp -lodb-mysql -lodb -lodb-boost -lcpr -lelasticlient -lalibabacloud-sdk-core -lhiredis -lredis++)
+target_link_libraries(${test} -lgflags -lspdlog -lfmt -lbrpc -lssl -lcrypto -lprotobuf -lleveldb -letcd-cpp-api -lcpprest -lcurl -ljsoncpp -lodb-mysql -lodb -lodb-boost -lcpr -lelasticlient -lamqpcpp -lev -lpthread -ldl)
 
 # 设置安装路径
 INSTALL(TARGETS ${target} RUNTIME DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)

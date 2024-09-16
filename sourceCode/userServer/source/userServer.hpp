@@ -4,7 +4,7 @@
 
 #include "log.hpp"
 #include "etcd.hpp"
-#include "mysql.hpp"
+#include "MUser.hpp"
 #include "redis.hpp"
 #include "esData.hpp"
 #include "util.hpp"
@@ -38,8 +38,15 @@ namespace hjb
                         const std::shared_ptr<odb::core::database> &mysql,
                         const std::shared_ptr<sw::redis::Redis> &redis,
                         const AllServiceChannel::ptr &channels,
-                        const std::string &fileName)
-            : _es(std::make_shared<ESUser>(es)), _mysql(std::make_shared<UserTable>(mysql)), _session(std::make_shared<LoginSession>(redis)), _status(std::make_shared<LoginStatus>(redis)), _code(std::make_shared<VerifyCode>(redis)), _fileServiceName(fileName), _channels(channels), _dms(dms)
+                        const std::string &fileServiceName)
+            : _es(std::make_shared<ESUser>(es)),
+              _mysql(std::make_shared<UserTable>(mysql)),
+              _session(std::make_shared<LoginSession>(redis)),
+              _status(std::make_shared<LoginStatus>(redis)),
+              _code(std::make_shared<VerifyCode>(redis)),
+              _fileServiceName(fileServiceName),
+              _channels(channels),
+              _dms(dms)
         {
             // 创建es索引
             _es->createIndex();
