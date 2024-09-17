@@ -78,7 +78,7 @@ message GetUserInfoResp {
     UserProto user = 4;
 }
 
-// 一次获取多个已登录用户的个人信息
+// 一次获取多个用户的个人信息
 message GetMultiUserInfoReq {
     string requestId = 1;
     repeated string userIds = 2;

@@ -1,0 +1,58 @@
+syntax = "proto3";
+package hjb;
+import "base.proto";
+
+option cc_generic_services = true;
+
+// 获取历史消息(根据时间)
+message GetHistoryMsgReq {
+    string requestId = 1;
+    string chatSessionId = 2;
+    int64 startTime = 3;
+    int64 overTime = 4;
+    optional string userId = 5;
+    optional string loginSessionId = 6;
+}
+message GetHistoryMsgResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated MessageInfo messages = 4;
+}
+
+// 获取最近历史消息(根据指定条数)
+message GetRecentMsgReq {
+    string requestId = 1;
+    string chatSessionId = 2;
+    int64 messageCount = 3;
+    optional int64 curTimeCount = 4; // 获取最近的n条消息
+    optional string userId = 5;
+    optional string loginSessionId = 6;
+}
+message GetRecentMsgResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated MessageInfo messages = 4;
+}
+
+// 获取历史消息(根据指定关键词)
+message MsgSearchReq {
+    string requestId = 1;
+    optional string userId = 2;
+    optional string loginSessionId = 3;
+    string chatSessionId = 4;
+    string key = 5;
+}
+message MsgSearchResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated MessageInfo messages = 4;
+}
+
+service MessageService {
+    rpc GetHistoryMsg(GetHistoryMsgReq) returns (GetHistoryMsgResp);
+    rpc GetRecentMsg(GetRecentMsgReq) returns (GetRecentMsgResp);
+    rpc MsgSearch(MsgSearchReq) returns (MsgSearchResp);
+}

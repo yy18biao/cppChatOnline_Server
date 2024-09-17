@@ -233,7 +233,8 @@ namespace hjb
     private:
         std::string _name;                             // 索引名称
         std::string _type;                             // 索引类型
-        Json::Value _mustNot;                         // 字段中的must_not部分
+        Json::Value _mustNot;                          // 字段中的must_not部分
+        Json::Value _must;                             // 字段中的must部分
         Json::Value _should;                           // 字段中的should部分
         Json::Value _index;                            // 最终的请求Json类型字段
         std::shared_ptr<elasticlient::Client> _client; // es客户端对象
@@ -262,6 +263,42 @@ namespace hjb
             return *this;
         }
 
+        // 添加字段中must部分里的term字段的数据
+        ESSearch &appendMustTerm(const std::string &key, const std::vector<std::string> &val)
+        {
+            // 最里层
+            Json::Value field;
+            for (const auto &str : val)
+                field[key].append(str);
+
+            // terms部分
+            Json::Value term;
+            term["term"] = field;
+
+            // must_not部分
+            _must.append(term);
+
+            return *this;
+        }
+
+        // 添加字段中must部分里的term字段的数据
+        ESSearch &appendMustMatch(const std::string &key, const std::vector<std::string> &val)
+        {
+            // 最里层
+            Json::Value field;
+            for (const auto &str : val)
+                field[key].append(str);
+
+            // terms部分
+            Json::Value match;
+            match["match"] = field;
+
+            // must_not部分
+            _must.append(match);
+
+            return *this;
+        }
+
         // 添加字段中should部分的数据
         ESSearch &appendShould(const std::string &key, const std::string &val)
         {
@@ -281,6 +318,8 @@ namespace hjb
             Json::Value cond;
             if (!_mustNot.empty())
                 cond["must_not"] = _mustNot;
+            if (!_must.empty())
+                cond["must"] = _must;
             if (!_should.empty())
                 cond["should"] = _should;
 
