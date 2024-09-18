@@ -10,6 +10,7 @@ DEFINE_string(instanceName, "/chatSessionService/instance", "当前实例名称"
 DEFINE_string(accessHost, "127.0.0.1:8002", "当前实例的外部访问地址");
 
 DEFINE_string(userService, "/service/userService", "用户管理子服务名称");
+DEFINE_string(messageService, "/service/messageService", "用户管理子服务名称");
 
 DEFINE_string(Mhost, "127.0.0.1", "mysql服务器地址");
 DEFINE_int32(Mport, 3306, "mysql服务器端口");
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
     cssb.makeMysql(FLAGS_Muser, FLAGS_Mpwd, FLAGS_Mhost,
                    FLAGS_Mdb, FLAGS_Mcharset, FLAGS_Mport, FLAGS_MmaxPool);
 
-    cssb.makeEtcdDis(FLAGS_registryHost, FLAGS_baseService, FLAGS_userService);
+    cssb.makeEtcdDis(FLAGS_registryHost, FLAGS_baseService, FLAGS_userService, FLAGS_messageService);
 
     cssb.makeRpcServer(FLAGS_listenPort, FLAGS_rpcTimeout, FLAGS_rpcThreads);
 

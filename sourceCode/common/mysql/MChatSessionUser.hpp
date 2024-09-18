@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ODBFactory.hpp"
 #include "chatSessionUser-odb.hxx"
 #include "chatSessionUser.hxx"

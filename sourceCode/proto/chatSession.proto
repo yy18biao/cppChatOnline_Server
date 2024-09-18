@@ -30,6 +30,52 @@ message GetTransmitTargetResp {
     repeated string targetIds = 5; // 消息的转发目标列表
 }
 
-service MessageTransmitService {
+// 会话列表获取
+message GetChatSessionListReq {
+    string requestId = 1;
+    optional string sessionId = 2;
+    optional string userId = 3;
+}
+message GetChatSessionListResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated ChatSessionInfo chatSessionInfos = 4;
+}
+
+// 创建会话
+message ChatSessionCreateReq {
+    string requestId = 1;
+    optional string sessionId = 2;
+    optional string userId = 3;
+    string chatSessionName = 4;
+    repeated string userIds = 5; // 会话里的成员id
+}
+message ChatSessionCreateResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    optional ChatSessionInfo chatSessionInfo = 4; 
+}
+
+// 获取会话成员列表
+message GetChatSessionMemberReq {
+    string requestId = 1;
+    optional string sessionId = 2;
+    optional string userId = 3;
+    string chatSessionId = 4;
+}
+message GetChatSessionMemberResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated UserProto users = 4;
+}
+
+
+service ChatSessionService {
     rpc GetTransmitTarget(NewMessageReq) returns (GetTransmitTargetResp);
+    rpc GetChatSessionList(GetChatSessionListReq) returns (GetChatSessionListResp);
+    rpc ChatSessionCreate(ChatSessionCreateReq) returns (ChatSessionCreateResp);
+    rpc GetChatSessionMember(GetChatSessionMemberReq) returns (GetChatSessionMemberResp);
 }

@@ -25,7 +25,7 @@ void stringMessage(const std::string &uid, const std::string &sid, const std::st
         return;
     }
 
-    hjb::MessageTransmitService_Stub stub(channel.get());
+    hjb::ChatSessionService_Stub stub(channel.get());
     hjb::NewMessageReq req;
     hjb::GetTransmitTargetResp resp;
     req.set_requestid(hjb::uuid());

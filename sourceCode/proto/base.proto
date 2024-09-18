@@ -77,3 +77,14 @@ message UserProto {
     string phone = 4; 
     bytes photo = 5;
 }
+
+//聊天会话信息
+message ChatSessionInfo {
+    optional string singleChatFriendId = 1; // 单聊的好友id
+    string chatSessionId = 2; // 会话ID
+    string chatSessionName = 3;// 会话名称 
+    // 会话最近一条消息
+    optional MessageInfo prevMessage = 4;
+    // 会话头像 单聊即为对方头像，群聊前端设置
+    optional bytes photo = 5;
+}

@@ -8,13 +8,13 @@ project(chatSessionServer)
 set(target "chatSessionServer")
 
 set(protoPath ${CMAKE_CURRENT_SOURCE_DIR}/../proto/) # 添加所需的proto源文件路径
-set(protoFiles user.proto base.proto chatSession.proto) # 添加所需的proto映射代码源文件名称
+set(protoFiles user.proto base.proto chatSession.proto message.proto) # 添加所需的proto映射代码源文件名称
 set(protoH "") # proto所映射的.h文件名称
 set(protoC "") # proto所映射的.cc文件名称
 set(protoCs "") # proto所映射的全部.cc文件名称
 
 set(odbPath ${CMAKE_CURRENT_SOURCE_DIR}/../odb/) # 添加所需的odb源文件路径
-set(odbFiles chatSessionUser.hxx) # 添加所需的odb映射代码源文件名称
+set(odbFiles chatSessionUser.hxx chatSession.hxx) # 添加所需的odb映射代码源文件名称
 set(odbH "") # odb所映射的.hxx文件名称
 set(odbC "") # odb所映射的.cxx文件名称
 set(odbCs "") # odb所映射的全部.cxx文件名称
