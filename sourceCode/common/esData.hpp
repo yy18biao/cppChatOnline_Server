@@ -214,7 +214,7 @@ public:
         if (json_user.isArray() == false)
         {
             ERROR("用户搜索结果为空或者结果不是数组类型");
-            return users;
+            return res;
         }
 
         DEBUG("检索结果数量：{}", json_user.size());

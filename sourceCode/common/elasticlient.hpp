@@ -148,7 +148,8 @@ namespace hjb
         }
 
         // 插入字段数据
-        ESInsert &append(const std::string &key, const std::string &val)
+        template<typename T>
+        ESInsert &append(const std::string &key, const T &val)
         {
             _index[key] = val;
             return *this;
@@ -197,7 +198,7 @@ namespace hjb
         std::shared_ptr<elasticlient::Client> _client; // es客户端对象
 
     public:
-        ESRemove(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type)
+        ESRemove(std::shared_ptr<elasticlient::Client> &client, const std::string &name, const std::string &type = "_doc")
             : _name(name), _type(type), _client(client)
         {
         }
@@ -264,7 +265,7 @@ namespace hjb
         }
 
         // 添加字段中must部分里的term字段的数据
-        ESSearch &appendMustTerm(const std::string &key, const std::vector<std::string> &val)
+        ESSearch &appendMustTerm(const std::string &key, const std::string &val)
         {
             // 最里层
             Json::Value field;
@@ -281,8 +282,8 @@ namespace hjb
             return *this;
         }
 
-        // 添加字段中must部分里的term字段的数据
-        ESSearch &appendMustMatch(const std::string &key, const std::vector<std::string> &val)
+        // 添加字段中must部分里的Match字段的数据
+        ESSearch &appendMustMatch(const std::string &key, const std::string &val)
         {
             // 最里层
             Json::Value field;

@@ -107,12 +107,13 @@ namespace hjb
                      const MessageCallback &cb)
         {
             _channel->consume(queue)
-                .onReceived([this, cb](const AMQP::Message &message, uint64_t deliverTag, bool redelivered)
-                            {
-                cb(message.body(), message.bodySize());
-                _channel->ack(deliverTag); })
-                .onError([](const char *message)
-                         { ERROR("订阅队列消息失败 : {}", message); return false; });
+                    .onReceived([this, cb](const AMQP::Message &message, uint64_t deliverTag, bool redelivered)
+                    {
+                        cb(message.body(), message.bodySize());
+                        _channel->ack(deliverTag); 
+                    })
+                    .onError([](const char *message)
+                    { ERROR("订阅队列消息失败 : {}", message); return false; });
 
             return true;
         }

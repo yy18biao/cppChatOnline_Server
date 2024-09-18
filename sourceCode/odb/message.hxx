@@ -56,16 +56,16 @@ public:
 
     // 各个成员的访问与设置接口
     void messageId(const std::string &messageId) { _messageId = messageId; }
-    std::string messageId() { return _messageId; }
+    std::string messageId() const { return _messageId; }
 
     void userId(const std::string &userId) { _userId = userId; }
-    std::string userId() { return _userId; }
+    std::string userId() const { return _userId; }
 
     void chatSessionId(const std::string &chatSessionId) { _chatSessionId = chatSessionId; }
-    std::string chatSessionId() { return _chatSessionId; }
+    std::string chatSessionId() const  { return _chatSessionId; }
 
     void messageType(const unsigned char messageType) { _messageType = messageType; }
-    unsigned char messageType() { return _messageType; }
+    unsigned char messageType() const { return _messageType; }
 
     boost::posix_time::ptime createTime() const { return _createTime; }
     void createTime(const boost::posix_time::ptime &createTime) { _createTime = createTime; }
