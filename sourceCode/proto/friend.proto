@@ -1,0 +1,101 @@
+syntax = "proto3";
+package hjb;
+import "base.proto";
+
+option cc_generic_services = true;
+
+//好友列表获取
+message GetFriendListReq {
+    string requestId = 1;          
+    optional string userId = 2;    
+    optional string loginSessionId = 3;
+}
+message GetFriendListResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated UserProto friends = 4; 
+}
+
+//好友删除
+message FriendRemoveReq {
+    string requestId = 1;
+    optional string userId = 2; 
+    optional string loginSessionId = 3;
+    string friendId = 4;         
+}
+message FriendRemoveResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+}
+
+//添加好友--发送好友申请
+message FriendAddReq {
+    string requestId = 1;
+    optional string loginSessionId = 2;
+    optional string userId = 3;
+    string friendId = 4;
+}
+message FriendAddResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    string eventId = 4; // 通知事件id
+}
+
+// 好友申请的处理
+message FriendAddProcessReq {
+    string requestId = 1;
+    string eventId = 2; // 通知事件id
+    bool agree = 3; // 是否同意好友申请
+    string applyUserId = 4; // 申请人的用户id
+    optional string loginSessionId = 5;
+    optional string userId = 6; // 被申请人id
+}
+message FriendAddProcessResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    optional string newchatSessionId = 4; 
+}
+
+// 获取待处理的好友申请的信息列表
+message GetPendingFriendEventListReq {
+    string requestId = 1;
+    optional string loginSessionId = 2;
+    optional string userId = 3;
+}
+message GetPendingFriendEventListResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated FriendEvent event = 4;
+}
+message FriendEvent { // 待处理的好友申请的信息
+    optional string eventId = 1;
+    UserProto sender = 3;
+}
+
+// 用户搜索
+message FriendSearchReq {
+    string requestId = 1;
+    string key = 2;
+    optional string loginSessionId = 3;
+    optional string userId = 4;
+}
+message FriendSearchResp {
+    string requestId = 1;
+    bool success = 2;
+    string errmsg = 3; 
+    repeated UserProto users = 4;
+}
+
+service FriendService {
+    rpc GetFriendList(GetFriendListReq) returns (GetFriendListResp);
+    rpc FriendRemove(FriendRemoveReq) returns (FriendRemoveResp);
+    rpc FriendAdd(FriendAddReq) returns (FriendAddResp);
+    rpc FriendAddProcess(FriendAddProcessReq) returns (FriendAddProcessResp);
+    rpc FriendSearch(FriendSearchReq) returns (FriendSearchResp);
+    rpc GetPendingFriendEventList(GetPendingFriendEventListReq) returns (GetPendingFriendEventListResp);
+}

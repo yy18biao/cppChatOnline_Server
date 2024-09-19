@@ -7,7 +7,7 @@ DEFINE_int32(logLevel, 0, "发布模式下指定日志输出等级");
 DEFINE_string(registryHost, "http://127.0.0.1:2379", "服务注册中心地址");
 DEFINE_string(baseService, "/service", "服务监控根目录");
 DEFINE_string(instanceName, "/userService/instance", "当前实例名称");
-DEFINE_string(accessHost, "127.0.0.1:8001", "当前实例的外部访问地址");
+DEFINE_string(accessHost, "127.0.0.1:8000", "当前实例的外部访问地址");
 
 DEFINE_string(file_service, "/service/fileService", "文件管理子服务名称");
 
@@ -26,7 +26,7 @@ DEFINE_int32(MmaxPool, 3, "mysql连接池最大连接数");
 
 DEFINE_string(Ehost, "http://127.0.0.1:9200/", "es服务器URL");
 
-DEFINE_int32(listenPort, 8001, "Rpc服务器监听端口");
+DEFINE_int32(listenPort, 8000, "Rpc服务器监听端口");
 DEFINE_int32(rpcTimeout, -1, "Rpc调用超时时间");
 DEFINE_int32(rpcThreads, 1, "Rpc的IO线程数量");
 

@@ -7,9 +7,9 @@ DEFINE_int32(logLevel, 0, "发布模式下指定日志输出等级");
 DEFINE_string(registryHost, "http://127.0.0.1:2379", "服务注册中心地址");
 DEFINE_string(baseService, "/service", "服务监控根目录");
 DEFINE_string(instanceName, "/speechService/instance", "当前实例名称");
-DEFINE_string(accessHost, "127.0.0.1:8006", "当前实例的外部访问地址");
+DEFINE_string(accessHost, "127.0.0.1:7000", "当前实例的外部访问地址");
 
-DEFINE_int32(listenPort, 8006, "Rpc服务器监听端口");
+DEFINE_int32(listenPort, 7000, "Rpc服务器监听端口");
 DEFINE_int32(rpcTimeout, -1, "Rpc调用超时时间");
 DEFINE_int32(rpcThreads, 1, "Rpc的IO线程数量");
 

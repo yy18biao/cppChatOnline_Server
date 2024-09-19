@@ -16,7 +16,7 @@
 
 namespace hjb
 {
-    // 聊天会话消息转发服务类
+    // 聊天会话服务类
     class ChatSessionServiceImpl : public ChatSessionService
     {
     private:
@@ -503,8 +503,8 @@ namespace hjb
 
             // 添加rpc服务
             _brpcServer = std::make_shared<brpc::Server>();
-            ChatSessionServiceImpl *ChatSessionService = new ChatSessionServiceImpl(_mysql, _channels, _userServiceName, _messageServiceName, _exchange, _routing_key, _mqClient);
-            if (_brpcServer->AddService(ChatSessionService, brpc::ServiceOwnership::SERVER_OWNS_SERVICE) == -1)
+            ChatSessionServiceImpl *chatSessionService = new ChatSessionServiceImpl(_mysql, _channels, _userServiceName, _messageServiceName, _exchange, _routing_key, _mqClient);
+            if (_brpcServer->AddService(chatSessionService, brpc::ServiceOwnership::SERVER_OWNS_SERVICE) == -1)
             {
                 ERROR("添加Rpc服务失败");
                 abort();
