@@ -74,7 +74,7 @@ message GetPendingFriendEventListResp {
 }
 message FriendEvent { // 待处理的好友申请的信息
     optional string eventId = 1;
-    UserProto sender = 3;
+    UserProto sender = 2;
 }
 
 // 用户搜索

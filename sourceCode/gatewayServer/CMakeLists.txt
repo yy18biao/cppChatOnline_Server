@@ -2,19 +2,19 @@
 cmake_minimum_required(VERSION 3.1.3)
 
 # 声明项目工程名称
-project(userServer)
+project(gatewayServer)
 
 # 声明目标文件名称
-set(target "userServer")
+set(target "gatewayServer")
 
 set(protoPath ${CMAKE_CURRENT_SOURCE_DIR}/../proto/) # 添加所需的proto源文件路径
-set(protoFiles user.proto base.proto file.proto) # 添加所需的proto映射代码源文件名称
+set(protoFiles user.proto base.proto file.proto chatSession.proto friend.proto gateway.proto message.proto speech.proto websocket.proto) # 添加所需的proto映射代码源文件名称
 set(protoH "") # proto所映射的.h文件名称
 set(protoC "") # proto所映射的.cc文件名称
 set(protoCs "") # proto所映射的全部.cc文件名称
 
 set(odbPath ${CMAKE_CURRENT_SOURCE_DIR}/../odb/) # 添加所需的odb源文件路径
-set(odbFiles user.hxx) # 添加所需的odb映射代码源文件名称
+set(odbFiles user.hxx message.hxx friendApply.hxx friend.hxx chatSessionUser.hxx chatSession.hxx) # 添加所需的odb映射代码源文件名称
 set(odbH "") # odb所映射的.hxx文件名称
 set(odbC "") # odb所映射的.cxx文件名称
 set(odbCs "") # odb所映射的全部.cxx文件名称
@@ -61,13 +61,19 @@ endforeach()
 
 # 获取源码目录下的所有源码文件
 set(srcFiles "")
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source srcFiles)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ srcFiles)
 
 # 声明目标及依赖
 add_executable(${target} ${srcFiles} ${protoCs} ${odbCs})
 
 # 设置需要链接的库
-target_link_libraries(${target} -lgflags -lspdlog -lfmt -lbrpc -lssl -lcrypto -lprotobuf -lleveldb -letcd-cpp-api -lcpprest -lcurl -ljsoncpp -lodb-mysql -lodb -lodb-boost -lcpr -lelasticlient -lalibabacloud-sdk-core -lhiredis -lredis++)
+target_link_libraries(${target} -lgflags
+    -lspdlog -lfmt -lbrpc -lssl -lcrypto
+    -lprotobuf -lleveldb -letcd-cpp-api
+    -lodb-mysql -lodb -lodb-boost
+    -lhiredis -lredis++
+    -lcpprest -lcurl
+    -lpthread -lboost_system)
 
 # 设置头文件默认搜索路径
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

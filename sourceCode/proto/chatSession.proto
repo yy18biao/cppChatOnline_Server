@@ -33,7 +33,7 @@ message GetTransmitTargetResp {
 // 会话列表获取
 message GetChatSessionListReq {
     string requestId = 1;
-    optional string sessionId = 2;
+    optional string loginSessionId = 2;
     optional string userId = 3;
 }
 message GetChatSessionListResp {
@@ -46,7 +46,7 @@ message GetChatSessionListResp {
 // 创建会话
 message ChatSessionCreateReq {
     string requestId = 1;
-    optional string sessionId = 2;
+    optional string loginSessionId = 2;
     optional string userId = 3;
     string chatSessionName = 4;
     repeated string userIds = 5; // 会话里的成员id
@@ -61,7 +61,7 @@ message ChatSessionCreateResp {
 // 获取会话成员列表
 message GetChatSessionMemberReq {
     string requestId = 1;
-    optional string sessionId = 2;
+    optional string loginSessionId = 2;
     optional string userId = 3;
     string chatSessionId = 4;
 }

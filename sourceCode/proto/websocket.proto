@@ -1,0 +1,45 @@
+syntax = "proto3";
+package hjb;
+import "base.proto";
+option cc_generic_services = true;
+
+enum WebsocketType {
+    FRIEND_ADD_APPLY = 0;
+    FRIEND_ADD_PROCESS = 1;
+    CHAT_SESSION_CREATE = 2;
+    CHAT_MESSAGE = 3;
+    FRIEND_REMOVE = 4;
+} 
+message FriendAddApply {
+    UserProto userInfo = 1; // 申请人信息
+} 
+
+message FriendAddProcess {
+    bool agree = 1;
+    UserProto userInfo = 2; // 处理人信息
+} 
+
+message FriendRemove {
+    string userId = 1; // 删除自己的用户 
+} 
+
+message NewChatSession {
+    ChatSessionInfo chatSessionInfo = 1; // 新建会话信息
+} 
+
+message NewMessage {
+    MessageInfo messageInfo = 1; // 新消息
+} 
+
+message WebsocketMessage {
+    optional string eventId = 1; // 通知事件操作id
+    WebsocketType type = 2; // 通知事件类型
+    // 事件备注信息
+    oneof remarks {  
+        FriendAddApply friendAddApply = 3;
+        FriendAddProcess friendProcessResult = 4;
+        FriendRemove friendRemove = 7;
+        NewChatSession newChatSessionInfo = 5; // 会话信息
+        NewMessage newMessageInfo = 6; // 消息信息
+    } 
+}

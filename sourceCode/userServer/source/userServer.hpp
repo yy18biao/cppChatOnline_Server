@@ -14,8 +14,6 @@
 #include "user.pb.h"
 #include "base.pb.h"
 #include "file.pb.h"
-#include "user-odb.hxx"
-#include "user.hxx"
 
 namespace hjb
 {

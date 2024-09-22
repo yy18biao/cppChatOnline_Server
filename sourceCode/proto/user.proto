@@ -19,7 +19,6 @@ message UserRegResp {
     string errmsg = 3;
 }
 
-
 //用户名登录 
 message UserLoginReq {
     string requestId = 1;
@@ -69,7 +68,7 @@ message PhoneVerifyCodeResp {
 message GetUserInfoReq {
     string requestId = 1;
     optional string userId = 2;
-    optional string sessionId = 3;
+    optional string loginSessionId = 3;
 }
 message GetUserInfoResp {
     string requestId = 1;
@@ -95,7 +94,7 @@ message GetMultiUserInfoResp {
 message SetUserPhotoReq {
     string requestId = 1;
     optional string userId = 2;
-    optional string sessionId = 3;
+    optional string loginSessionId = 3;
     string photo = 4;
 }
 message SetUserPhotoResp {
@@ -109,7 +108,7 @@ message SetUserPhotoResp {
 message SetNicknameReq {
     string requestId = 1;
     optional string userId = 2;
-    optional string sessionId = 3;
+    optional string loginSessionId = 3;
     string nickname = 4;
 }
 message SetNicknameResp {
@@ -123,7 +122,7 @@ message SetNicknameResp {
 message SetUserDescReq {
     string requestId = 1;
     optional string userId = 2;
-    optional string sessionId = 3;
+    optional string loginSessionId = 3;
     string desc = 4;
 }
 message SetUserDescResp {
@@ -137,7 +136,7 @@ message SetUserDescResp {
 message SetPhoneReq {
     string requestId = 1;
     optional string userId = 2;
-    optional string sessionId = 3;
+    optional string loginSessionId = 3;
     string phone = 4;
     string phoneVerifyCodeId = 5;
     string phoneVerifyCode = 6;

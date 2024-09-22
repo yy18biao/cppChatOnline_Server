@@ -323,6 +323,48 @@ namespace hjb
             }
         }
 
+        // 获取待处理的好友申请的信息列表
+        virtual void GetPendingFriendEventList(::google::protobuf::RpcController *controller,
+                                               const ::hjb::GetPendingFriendEventListReq *request,
+                                               ::hjb::GetPendingFriendEventListResp *response,
+                                               ::google::protobuf::Closure *done)
+        {
+            // 以 ARII 方式自动释放 done 对象
+            brpc::ClosureGuard rpc_guard(done);
+
+            // 错误处理函数(出错时调用)
+            auto err = [this, response](const std::string &rid,
+                                        const std::string &errmsg) -> void
+            {
+                response->set_requestid(rid);
+                response->set_success(false);
+                response->set_errmsg(errmsg);
+                return;
+            };
+
+            std::string rid = request->requestid();
+            std::string uid = request->userid();
+
+            // 从数据库获取
+            auto userIds = _friendApplyMysql->applyUsers(uid);
+
+            // 从用户子服务获取用户信息
+            std::unordered_map<std::string, UserProto> users;
+            if (!_getUser(rid, userIds, users))
+            {
+                ERROR("{} - 批量获取用户信息失败", rid);
+                return err(rid, "批量获取用户信息失败");
+            }
+
+            response->set_requestid(rid);
+            response->set_success(true);
+            for (const auto &user : users)
+            {
+                auto ev = response->add_event();
+                ev->mutable_sender()->CopyFrom(user.second);
+            }
+        }
+
     private:
         bool _getUser(const std::string &rid,
                       const std::vector<std::string> &userIds,
